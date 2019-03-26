@@ -1,5 +1,7 @@
 # Percolacion
 
+## $p_c \simeq 0.5927...$
+
 Tengo una red del estilo:
 
 ```
@@ -16,20 +18,16 @@ Tengo una red del estilo:
  --- --- --- --- --- ---
 ```
 
-El problema es llenar los nodos con unos con probabilidad $p$. Si $p$ es bajo,
-la cantidad de unos va a ser chica, ya que la probabilidad de cero es $(1 - p)$.
+El problema es llenar los nodos con unos con probabilidad $p$. Si $p$ es bajo, la cantidad de unos va a ser chica, ya que la probabilidad de cero es $(1 - p)$.
 
 Es una gran herramienta para el estudio de transiciones de fase.
 
 * Cuando percola? Cuando hay conexion entre los lados.
 
-"Objetivo": Encontrar clusters de primeros vecinos. La aparicion de clusters
-esta ligado a p. Existe $p_c$ tal que si $p < p_c$ el sistema no percola y si
-$p > p_c$ *siempre* percola?
+"Objetivo": Encontrar clusters de primeros vecinos. La aparicion de clusters esta ligado a p. Existe $p_c$ tal que si $p < p_c$ el sistema no percola y si $p > p_c$ *siempre* percola?
 
 
-La dificultad esta en que se esta simulando con un $L < \inf$, cuando el
-sistema verdadero tiene $L \rightarrow \inf$.
+La dificultad esta en que se esta simulando con un $L < \infty$, cuando el sistema verdadero tiene $L \rightarrow \infty$.
 
 
 ```
@@ -45,9 +43,7 @@ Percolacion
  -|---------|---------|----> p
                     1
 ```
-Cuando $L \rightarrow \inf$ la curva se ve asi. Cuando $L \neq \inf$ la curva
-se suaviza y uno toma un estadistico. No solo se suaviza sino que tambien puede
-complicarse porque se corre para los costados.
+Cuando $L \rightarrow \infty$ la curva se ve asi. Cuando $L \neq \infty$ la curva se suaviza y uno toma un estadistico. No solo se suaviza sino que tambien puede complicarse porque se corre para los costados.
 
 ## Primera pregunta
 
@@ -64,8 +60,7 @@ Los programas de C tienen basicamente 3 partes:
   #include<stdlib.h>  // Standard library
   #include<math.h>  // No indispensable, pero si para nosotros en general
   ```
-  Todo lo que arranque con $\#$, es un comentario, no lo lee el compilador. El
-  precompilador lo lee sin embargo, y se encarga de incluir los paquetes.
+  Todo lo que arranque con $\#$, es un comentario, no lo lee el compilador. El precompilador lo lee sin embargo, y se encarga de incluir los paquetes.
 
 * Definiciones:
   * Tambien se pueden definir constantes (**siempre en mayuscula!**)
@@ -75,9 +70,7 @@ Los programas de C tienen basicamente 3 partes:
   De la misma manera que con los paquetes, son manejadas por el precompilador.
 
 * Declaraciones de funciones
-  * Es buena costumbre declarar las funciones a
-utilizar al principio. La funcion principal tiene que llamarse `main`.
-Las funciones se declaran como:
+  * Es buena costumbre declarar las funciones a utilizar al principio. La funcion principal tiene que llamarse `main`. Las funciones se declaran como:
     1. Que va a devolver. Que devuelva a void salta a warning en general.
     2. Como se llama.
     3. El codigo entre corchetes.
@@ -89,8 +82,7 @@ Las funciones se declaran como:
       return 0
     }
   ```
-  * Argumentos de linea de comando: Cualquier cosa que ponga en la linea de
-  comando, van al main:
+  * Argumentos de linea de comando: Cualquier cosa que ponga en la linea de comando, van al main:
   ```c
   int main(argc, argv[])
     {
@@ -98,12 +90,9 @@ Las funciones se declaran como:
       return 0;
     }
   ```
-  `argc` viene a ser como la cantidad de argumentos, `argv` los valores.:
-  Ejemplo: `./miprograma 42 3.14156` tiene 3 argumentos (`argc = 3`) y los
-  valores son `[./miprograma, 42, 1.2345]`.
+  `argc` viene a ser como la cantidad de argumentos, `argv` los valores.: Ejemplo: `./miprograma 42 3.14156` tiene 3 argumentos (`argc = 3`) y los valores son `[./miprograma, 42, 1.2345]`.
 
-  Todos los argumentos son, en principio, strings. En nuestro ejemplo, si
-  quisieramos convertir el 42 en entero:
+  Todos los argumentos son, en principio, strings. En nuestro ejemplo, si quisieramos convertir el 42 en entero:
   ```c
   int main(argc, argv[])
     {
@@ -115,9 +104,7 @@ Las funciones se declaran como:
       return 0;
     }
   ```
-  El ampersand (`&`) lo que hace es direccionar hacia alguna posicion en
-  memoria. Cuando definio `int purposeOfLife` me guardo esos bytes de memoria,
-  y despues lo guardo ahi. De las misma manera que las funciones se declaran al principio, las variables tambien.
+  El ampersand (`&`) lo que hace es direccionar hacia alguna posicion en memoria. Cuando definio `int purposeOfLife` me guardo esos bytes de memoria, y despues lo guardo ahi. De las misma manera que las funciones se declaran al principio, las variables tambien.
 
 ----
 
@@ -129,9 +116,7 @@ que definir:
 * Clasificar
 * Percola?
 
-Como defino mi red? Se la puede trabajar como un arreglo aplastado `==>` un
-vector. En vez de hacer `red[i][j]` hago `red[dim * i + j]`. Para definir a
-la red (con punteros o sin punteros):
+Como defino mi red? Se la puede trabajar como un arreglo aplastado `==>` un vector. En vez de hacer `red[i][j]` hago `red[dim * i + j]`. Para definir a la red (con punteros o sin punteros):
 ```c
 int *red;  // puntero
 int red_sin_puntero[dim * dim];
@@ -141,22 +126,17 @@ Para alocarle la memoria:
 int *red;
 red = (int*)malloc(dim * dim * sizeof(int))
 ```
-Aca aloca la memoria (`malloc` significa Memory ALLOCation) y despues uno tiene que llenar esos lugares que se alocaron con enteros (0 o 1) Al final de
-todo, cuando uno no lo necesita, habria que liberara la memoria. Para borrar
+Aca aloca la memoria (`malloc` significa Memory ALLOCation) y despues uno tiene que llenar esos lugares que se alocaron con enteros (0 o 1) Al final de todo, cuando uno no lo necesita, habria que liberara la memoria. Para borrar
 ```c
 free(red);
 ```
-Otra manera de hacerlos con los punteros, es ir directamente a la direccion
-de memoria que corresponde:
+Otra manera de hacerlos con los punteros, es ir directamente a la direccion de memoria que corresponde:
 ```c
 *(red + dim * i + j);
 ```
-Asi trae el entero que se encuentra en la posicion de memoria `red + dim * i + j`.
-Recordemos que el nombre de la variable me dice el "lugar" de memoria en donde
-la encuentro para los punteros.
+Asi trae el entero que se encuentra en la posicion de memoria `red + dim * i + j`. Recordemos que el nombre de la variable me dice el "lugar" de memoria en donde la encuentro para los punteros.
 
-Todo una parte de generacion de numeros enteros que no anote. Pedir apuntes a
-otra persona.
+Todo una parte de generacion de numeros enteros que no anote. Pedir apuntes a otra persona.
 
 Para compilar:
 
@@ -174,22 +154,63 @@ En este orden!
 
 #### Algoritmo de Hoshen - Kopelman
 
-Estrategia: Recorrer el array de la manera que esta escrito. Si esta,
-poblado y sus vecinos arriba y a la izquierda no, nueva etiqueta. Si
-alguno esta etiquetado, pero el otro no, asigno esa etiqueta. Si
-ninguno esta etiquetado, tengo un conflicto de etiquetas.
+Estrategia: Recorrer el array de la manera que esta escrito. Si esta, poblado y sus vecinos arriba y a la izquierda no, nueva etiqueta. Si alguno esta etiquetado, pero el otro no, asigno esa etiqueta. Si ninguno esta etiquetado, tengo un conflicto de etiquetas.
 
 Para el conflicto, uso Hoshen-Kopelman:
 
   * Mantengo un historial, de longitud dim * dim.
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ...
-  Cuando tengo que corregir ese lugar, lo cambio por - el frag que
-  queda, el menor de los dos del conflicto. Si entran en conflicto las
-  flags 2 y 3, pongo -2 en la posicion 3 del historial y despues al
-  final reemplazo la etiqueta 3 por el 2 (porque esta apuntada con el
-  historial al -2).
+  Cuando tengo que corregir ese lugar, lo cambio por - el frag que queda, el menor de los dos del conflicto. Si entran en conflicto las flags 2 y 3, pongo -2 en la posicion 3 del historial y despues al final reemplazo la etiqueta 3 por el 2 (porque esta apuntada con el historial al -2).
 
 #### Estrategia para encontrar $p_c$
 
-Para encontrar $p_c$ hay 2 maneras, una de tipo bisectiva y otra secuencial.
-Mejor usar la secuencial con aproximadamente 27000 iteraciones por punto.
+Para encontrar $p_c$ hay 2 maneras, una de tipo bisectiva y otra secuencial. Mejor usar la secuencial con aproximadamente 27000 iteraciones por punto.
+
+
+## Clase 3
+
+Tenemos que en el caso de $L \rightarrow \infty$, vale que $F(p) = \Theta_H (p - p_c)$, por lo que vale que $f(p) = \frac{dF}{dp} = \delta(p - p_c)$, entonces:
+
+$$< p > = \int_0^1 p f(p) dp = p_c$$
+
+$ \Rightarrow $ De aca viene la idea de tomar el valor medio de la distribucion. Sin embargo esto es medio naive, y no funciona muy bien.
+
+Uno termina suponiendo que cuanto mas se parece la curva a la $\Theta_H$ es una cuestion de escala, por lo que hacer crecer $L$ es acercar a $F(p) \rightarrow \Theta_H$.
+
+Planteo que el scaling viene dado por:
+
+$$\Phi(a(L)(p-p_c)), a(L) \simeq L^{\frac{1}{\nu}}$$
+
+Volviendo al valor medio de $p$, ahora tenemos la nueva funcion desconocida $\Phi$ que depende de $\Phi(z = L^{\frac{1}{\nu}} ( p - p_c))$:
+
+$$< p > = \int_0^1 p f(p) dp = \int (z L^{\frac{1}{\nu}} + p_c) \Phi(z) L^{\frac{-1}{\nu}} dz$$
+$$< p > = p_c + \int_{z_{min}}^{z_{max}} \Phi(z) dz L^{\frac{-1}{\nu}}$$
+$$< p > = p_c + A L^{\frac{-1}{\nu}}$$
+
+Vemos que ahora queda explicito que usar un sistema finito, me da un corrimiento $p_c$ que en principio no puedo determinar. Para sacarnos esa dependencia de encima, lo mejor que podemos hacer es graficar el valor medio de $p$ en funcion de L, en log log.
+
+$$p_c(L) = p_c(\infty) + A L^{\frac{-1}{\nu}}$$
+
+Aplicando el logaritmo a ambos miembros:
+
+$$ln(p_c(\infty) - p_c(L)) = b + m \ln(L)$$
+
+Deberia ser una recta! Sin embargo, para L muy grande, la funcion se plancha, y deja de valer que A no depende de L. Vemos entonces que agrandar la ventana no es necesariamente bueno, ya que me encuentro con estos problemas.
+
+##### Porque pasa esto?
+
+Falla todo porque la distribucion no es simetrica. Cuanto mas comprimido esta, mas simetrico "parece" por lo que tiende a anular la integral que genera $A$. Gracias a la asimetria, podemos saber mas sobre la cuestion al infinito. De alguna manera parecida, se trabaja en teorica 3. Para estudiar el cambio de fase, uno no se para sobre el cambio de fase sino en la proximidad, para poder extrapolar informacion.
+
+##### Como puedo hacer para calcular $p_c$ sin tener en cuenta $\nu$?
+
+Uso la varianza de la distribucion.
+
+$$\sigma ^ 2 = < p^2 > - < p > ^2$$
+
+Si grafico $p_c(L)$ en funcion de $\sigma$, tenemos que en $p_c(\infty)$ deberia ser la ordenada al origen de esta distribucion. Asi se puede extrapolar el valor de la misma y conseguir el $p_c$. En particular vale que:
+
+$$\sigma ^ 2 = (B - A ^ 2) L ^{\frac{-2}{\nu}}$$
+
+Por lo tanto, $\sigma \simeq L ^{\frac{-1}{\nu}} \simeq p_c(L) - p_c(\infty)$, mas alla de una constante, por lo que esperamos que la relacion entre $\sigma$ y $<p>$ sea lineal.
+
+$\rightarrow$ Graficando $<p>(\sigma)$ para los distintos $L$ vale que haciendo un ajuste lineal, la ordenada al origen deberia ser $p_c$.

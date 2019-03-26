@@ -14,6 +14,82 @@ float random_numb(int *p);
 int printred(int* red, int dim);
 int clasificar(int* red, int dim);
 int etiqueta_falsa(int *red, int *historial, int s1, int s2, int i);
+int percola(int *red, int dim);
+
+
+// Auxiliares {{{
+
+
+int printred(int* red, int dim) {
+  /*
+  Imprimir la red de percolacion.
+
+  Funcion auxiliar para chequear que la red se genera correctamente.
+  */
+  int i, j;
+
+  for (i=0; i<dim; i=i+1) {
+    for (j=0; j<dim; j=j+1) {
+      printf("%2d ", *(red + dim * i + j));
+    }
+    printf("\n");
+  }
+  printf("\n");
+  return 0;
+}
+
+
+int printvec(int* vec, int dim) {
+  /*
+  Printear vector con puntero de dimension dim.
+  */
+  int i;
+
+  for (i=0; i < dim; i=i+1) printf("%d\n", *(vec + i));
+  return 0;
+}
+
+
+// }}}
+
+
+int percola(int *red, int dim) {
+  /* Saber si percola o no la red.
+
+  Para determinarlo se toman dos vectores auxiliares de dimension dim,
+  uno para la primera fila y otro para la ultima. Se pueblan los en estos
+  vectores las posiciones que corresponden a las etiquetas que existan en
+  la primera y ultima fila, y se multiplican elemento a elemento. Si la
+  suma da distinto de cero, entonces percola.
+  */
+  int* primera_fila;
+  int* ultima_fila;
+  int suma;
+  int i;
+
+  primera_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
+  ultima_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
+
+  // Me aseguro que mis vectores tengan solo ceros
+  for (i=0; i < dim; i++) {
+    *(primera_fila + i) = 0;
+    *(ultima_fila + i) = 0;
+  }
+
+  // Pueblo mis vectores de etiquetas
+  for (i=0; i < dim; i++) {
+    *(primera_fila + *(red + i)) = *(red + i);
+    *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
+  }
+
+  // Multiplico elemento a elemento, dejando el resultado en suma
+  suma = 0;
+  for (i=0; i < dim; i++) {
+    suma = suma + *(primera_fila + i) * *(ultima_fila + i);
+  }
+  if (suma) return 1;
+  return 0;
+}
 
 
 float random_numb(int *semilla) {
@@ -35,20 +111,15 @@ float random_numb(int *semilla) {
   }
 
 
-int printred(int* red, int dim) {
+int llenarhistorial(int* historial, int dim) {
   /*
-  Imprimir la red de percolacion.
+  Llenar historial con range(0, dim * dim /2)
 
   Funcion auxiliar para chequear que la red se genera correctamente.
   */
-  int i, j;
+  int i;
 
-  for (i=0; i<dim; i=i+1) {
-    for (j=0; j<dim; j=j+1) {
-      printf("%d ", *(red + dim * i + j));
-    }
-    printf("\n");
-  }
+  for (i=0; i<dim * dim /2; i=i+1) *(historial + i) = i;
   return 0;
 }
 
@@ -74,11 +145,13 @@ int poblar(int* red, float p, int dim, int *semilla) {
 
 
 int limpiar_etiquetas(int *red, int *historial, int dim) {
-  int i;
+  int i, s1;
 
   for (i=0; i < dim * dim; i++) {
     if (*(red + i)) {
-      *(red + i) = *(historial + *(red + i));
+      s1 = *(red + i);
+      while (*(historial + s1) < 0) s1 = - *(historial + s1);
+      *(red + i) = s1;
     }
   }
   return 0;
@@ -112,6 +185,7 @@ int clasificar(int* red, int dim) {
   int j;
 
   historial = (int*)malloc(dim * dim * sizeof(int));
+  llenarhistorial(historial, dim);
 
   frag = 2;
   // Primera fila {{{
@@ -196,6 +270,7 @@ int main(int argc, char** argv) {
   int dim;
   int* red;
   int* semilla;
+  int _percola;
 
   semilla = (int*)malloc(sizeof(int));
 
@@ -206,10 +281,8 @@ int main(int argc, char** argv) {
   red = (int*)malloc(dim * dim * sizeof(int));
 
   poblar(red, p, dim, semilla);
-  printred(red, dim);
-  printf("\n");
   clasificar(red, dim);
-  printred(red, dim);
-  printf("\n");
+  _percola = percola(red, dim);
+  printf("%d\n", _percola);
   return 0;
 }
