@@ -11,13 +11,96 @@
 #define B 10
 
 float random_numb(int *p);
-int printred(int* red, int dim);
+
+int poblar(int* red, float p, int dim, int *semilla);
 int clasificar(int* red, int dim);
-int etiqueta_falsa(int *red, int *historial, int s1, int s2, int i);
-int percola(int *red, int dim);
+int percola_y_masa(int *red, int dim);
+
+int etiqueta_falsa(int *valor, int *historial, int s1, int s2);
+int actualizar(int* valor, int up, int left, int* frag, int* historial);
+
+int printred(int* red, int dim);
+
+int main(int argc, char** argv) {
+  int* semilla;
+  int repeticiones;
+
+  semilla = (int*)malloc(sizeof(int));
+
+  sscanf(argv[1], "%d", &repeticiones);
+  if (argc == 3) sscanf(argv[2], "%d", &*semilla);
+  else *semilla = 1;
+
+  int* dims;
+  int* red;
+
+  int i, j, l, dim, _percola;
+  float p, p_c, p_c_squared;
+
+  dims = (int*)malloc(5 * sizeof(int));
+  *dims = 4;
+  *(dims + 1) = 16;
+  *(dims + 2) = 32;
+  *(dims + 3) = 64;
+  *(dims + 4) = 128;
+
+  printf("%s,%s,%s,%s\n", "L", "p_c", "var", "masa");
+  for (l=0; l<5; l++) {
+    dim = *(dims + l);
+    p_c = 0.0;
+    p_c_squared = 0.0;
+    for (i=0; i<repeticiones; i++) {
+      p = 0.5;
+      for (j=2; j<12; j++) {
+
+        red = (int*)malloc(dim * dim * sizeof(int));
+        poblar(red, p, dim, semilla);
+        clasificar(red, dim);
+
+        _percola = percola_y_masa(red, dim);
+        if (_percola) p = p - pow(2, -j);
+        else p = p + pow(2, -j);
+
+        free(red);
+      }
+      p_c = p_c + p;
+      p_c_squared = p_c_squared + p * p;
+    }
+    p_c = p_c / repeticiones;
+    p_c_squared = p_c_squared / repeticiones;
+    printf("%d,%f,%f\n", dim, p_c, p_c_squared - pow(p_c, 2));
+  }
+  return 0;
+}
 
 
 // Auxiliares {{{
+
+
+// int prueba() {
+//   int* semilla;
+//
+//   semilla = (int*)malloc(sizeof(int));
+//   *semilla = 1;
+//
+//   int* red;
+//
+//   int i, j, l, dim, _percola;
+//   float p, p_c, p_c_squared;
+//
+//   dim = 5;
+//   p = 0.6;
+//
+//   red = (int*)malloc(dim * dim * sizeof(int));
+//   poblar(red, p, dim, semilla);
+//   printred(red, dim);
+//   clasificar(red, dim);
+//   printred(red, dim);
+//   _percola = percola_y_masa(red, dim);
+//   printf("%d\n", _percola);
+//
+//   return 0;
+// }
 
 
 int printred(int* red, int dim) {
@@ -50,48 +133,6 @@ int printvec(int* vec, int dim) {
 }
 
 
-// }}}
-
-
-int percola(int *red, int dim) {
-  /* Saber si percola o no la red.
-
-  Para determinarlo se toman dos vectores auxiliares de dimension dim,
-  uno para la primera fila y otro para la ultima. Se pueblan los en estos
-  vectores las posiciones que corresponden a las etiquetas que existan en
-  la primera y ultima fila, y se multiplican elemento a elemento. Si la
-  suma da distinto de cero, entonces percola.
-  */
-  int* primera_fila;
-  int* ultima_fila;
-  int suma;
-  int i;
-
-  primera_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
-  ultima_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
-
-  // Me aseguro que mis vectores tengan solo ceros
-  for (i=0; i < dim; i++) {
-    *(primera_fila + i) = 0;
-    *(ultima_fila + i) = 0;
-  }
-
-  // Pueblo mis vectores de etiquetas
-  for (i=0; i < dim; i++) {
-    *(primera_fila + *(red + i)) = *(red + i);
-    *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
-  }
-
-  // Multiplico elemento a elemento, dejando el resultado en suma
-  suma = 0;
-  for (i=0; i < dim; i++) {
-    suma = suma + *(primera_fila + i) * *(ultima_fila + i);
-  }
-  if (suma) return 1;
-  return 0;
-}
-
-
 float random_numb(int *semilla) {
   /*
   Devuelve un numero aleatorio entre 0.0 y 1.0.
@@ -111,16 +152,74 @@ float random_numb(int *semilla) {
   }
 
 
-int llenarhistorial(int* historial, int dim) {
+int pointerrange(int* vec, int start, int end) {
   /*
-  Llenar historial con range(0, dim * dim /2)
+  Llenar vector puntero con range(0, dim * dim /2)
 
   Funcion auxiliar para chequear que la red se genera correctamente.
   */
   int i;
 
-  for (i=0; i<dim * dim /2; i=i+1) *(historial + i) = i;
+  for (i=start; i<end; i=i+1) *(vec + i) = i;
   return 0;
+}
+
+
+// }}}
+
+
+int percola_y_masa(int *red, int dim) {
+  /* Saber si percola o no la red.
+
+  Para determinarlo se toman dos vectores auxiliares de dimension dim,
+  uno para la primera fila y otro para la ultima. Se pueblan los en estos
+  vectores las posiciones que corresponden a las etiquetas que existan en
+  la primera y ultima fila, y se multiplican elemento a elemento. Si la
+  suma da distinto de cero, entonces percola.
+  */
+  int* primera_fila;
+  int* ultima_fila;
+  int i, suma, etiqueta;
+
+  primera_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
+  ultima_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
+
+  // Me aseguro que mis vectores tengan solo ceros
+  for (i=0; i < dim; i++) {
+    *(primera_fila + i) = 0;
+    *(ultima_fila + i) = 0;
+  }
+
+  // Pueblo mis vectores de etiquetas
+  for (i=0; i < dim; i++) {
+    *(primera_fila + *(red + i)) = *(red + i);
+    *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
+  }
+
+  // Multiplico elemento a elemento, dejando el resultado en suma
+  suma = 0;
+  for (i=0; i < dim; i++) suma = suma + *(primera_fila + i) * *(ultima_fila + i);
+
+  i = 0;
+  etiqueta = 0;
+
+  while (i < dim) {
+    if (*(primera_fila + i) * *(ultima_fila + i)) {
+      etiqueta = *(primera_fila + i);
+      break;
+    }
+    i++;
+  }
+
+  free(primera_fila);
+  free(ultima_fila);
+
+  if (etiqueta) {
+    suma = 0;
+    for (i=0; i < dim * dim; i++) if (*(red + i) == etiqueta) suma++;
+    return suma;
+  }
+  else return 0;
 }
 
 
@@ -177,73 +276,48 @@ int clasificar(int* red, int dim) {
     final reemplazo la etiqueta 3 por el 2 (porque esta apuntada con el
     historial al -2).
   */
-  int frag;  // Labeler de fragmentos
+  int* frag;  // Labeler de fragmentos
   int* historial;  // Puntero al historial
-  int s1;  // Valor de la posicion anterior
-  int s2;  // Valor de la posicion arriba
+  int up;
+  int left;
   int i;
   int j;
 
   historial = (int*)malloc(dim * dim * sizeof(int));
-  llenarhistorial(historial, dim);
+  frag = (int*)malloc(sizeof(int));
+  pointerrange(historial, 0, dim * dim);
 
-  frag = 2;
-  // Primera fila {{{
+  *(frag) = 2;
 
+  up = 0;
+  left = 0;
   if (*(red)) {
-    *(red) = frag;
-    frag++;
+    actualizar(red, up, left, frag, historial);
   }
   for (j=1; j < dim; j++) {
-    if (*(red + j)) {
-      s1 = *(red + j - 1);
-      if (s1) {
-        *(red + j) = s1;
-        } else {
-          *(red + j) = frag;
-          frag++;
-        }
-      }
+    left = *(red + j - 1);
+    actualizar(red + j, 0, left, frag, historial);
     }
-  // }}}
-
   for (i=1; i < dim; i++) {
-    // Primer elemento {{{
-    s1 = 0;
-    s2 = *(red + dim * (i - 1)) ;
-    if (*(red + dim * i)) {
-      if (s2) {
-        *(red + dim * i) = s2;
-      } else {
-        *(red + dim * i) = frag;
-        frag++;
-      }
-    }
-    // }}}
+    up = *(red + dim * (i - 1));
+    left = 0;
+    actualizar(red + dim * i, up, left, frag, historial);
     for (j=1; j < dim; j++) {
-      s1 = *(red + dim * i + j - 1);
-      s2 = *(red + dim * (i - 1) + j);
+      up = *(red + dim * (i - 1) + j);
+      left = *(red + dim * i + j - 1);
       if (*(red + dim * i + j)) {
-        if (s1 + s2) {
-          if (s1 * s2) {
-            etiqueta_falsa(red, historial, s1, s2, dim * i + j);
-          } else {
-            *(red + dim * i + j) = s2;
-            if (s1 > s2) *(red + dim * i + j) = s1;
-          }
-        } else {
-          *(red + dim * i + j) = frag;
-          frag++;
+        actualizar(red + dim * i + j, up, left, frag, historial);
         }
       }
     }
-  }
   limpiar_etiquetas(red, historial, dim);
+  free(historial);
+  free(frag);
   return 0;
 }
 
 
-int etiqueta_falsa(int *red, int *historial, int s1, int s2, int i) {
+int etiqueta_falsa(int *valor, int *historial, int s1, int s2) {
   int minimo, maximo;
 
   while (*(historial + s1) < 0) {
@@ -258,31 +332,26 @@ int etiqueta_falsa(int *red, int *historial, int s1, int s2, int i) {
       minimo = s2;
       maximo = s1;
     }
-  *(red + i) = minimo;
+  *valor = minimo;
   *(historial + maximo) = - minimo;
   *(historial + minimo) = minimo;  // En caso de que sean iguales, me salva
   return 0;
 }
 
 
-int main(int argc, char** argv) {
-  float p;
-  int dim;
-  int* red;
-  int* semilla;
-  int _percola;
-
-  semilla = (int*)malloc(sizeof(int));
-
-  sscanf(argv[1], "%f", &p);
-  sscanf(argv[2], "%d", &dim);
-  sscanf(argv[3], "%d", &*semilla);
-
-  red = (int*)malloc(dim * dim * sizeof(int));
-
-  poblar(red, p, dim, semilla);
-  clasificar(red, dim);
-  _percola = percola(red, dim);
-  printf("%d\n", _percola);
+int actualizar(int* valor, int up, int left, int* frag, int* historial) {
+  if (*(valor)) {
+    if (up + left) {
+      if (up * left) {
+        etiqueta_falsa(valor, historial, left, up);
+      } else {
+        *(valor) = up;
+        if (left > up) *(valor) = left;
+        }
+      } else {
+        *(valor) = *frag;
+        *frag = *frag + 1;
+      }
+    }
   return 0;
-}
+  }

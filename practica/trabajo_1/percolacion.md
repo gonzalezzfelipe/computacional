@@ -214,3 +214,66 @@ $$\sigma ^ 2 = (B - A ^ 2) L ^{\frac{-2}{\nu}}$$
 Por lo tanto, $\sigma \simeq L ^{\frac{-1}{\nu}} \simeq p_c(L) - p_c(\infty)$, mas alla de una constante, por lo que esperamos que la relacion entre $\sigma$ y $<p>$ sea lineal.
 
 $\rightarrow$ Graficando $<p>(\sigma)$ para los distintos $L$ vale que haciendo un ajuste lineal, la ordenada al origen deberia ser $p_c$.
+
+
+----
+
+## Clase 4
+
+##### Hipotesis de Scaling:
+
+$$p_c(L) - p_c(\infty) = A L^{\frac{-1}{\nu}}$$
+
+Vamos a insistir mas con esta idea. Voy a buscar despejar $L$.
+
+$$| p_c(L) - p_c(\infty) |^{-\nu} = A^{-\nu} L$$
+
+Me estaria diciendo que existe una relacion geometrica entre el tamaño de la red y la cercania de mi $p_c$ al verdadero $(p_c(\infty))$.
+
+Tiene sentido geometrico. Es entendible que se "anticipe" la transcion para $L < \infty$, porque es mas probable percolar en una red mas corta. Otra manera de pensarlo, es que si percolo para $L = \infty$, antes ya percolo para $L < \infty$ (dicho mal y pronto). Si pienso en la longitud media de los clusters en vez de L, puedo pensar en una relacion del estilo:
+
+$$\xi \propto | p - p_c(\infty)|^{-\nu}$$
+
+Asi defino la magnitud `LONGITUD CARACTERISTICA`. Es aquella longitud que conecta un punto del cluster con otro punto del cluster. Tambien llamada longitud de correlacion.
+
+> `Longitud de correlación`: Distancia promedio entre dos puntos cualquiera que pertenecen al mismo cluster.
+
+Vemos que vale que si $p \rightarrow p_c(\infty) \Rightarrow \xi \rightarrow \infty.$
+
+Tenemos entonces que hay que ser inteligente a la hora de definir el entorno que voy a estudiar, porque se vuelve importante el tamaño de la ventana que uno elige. Ya no se tiene tanta libertad, pasa a existir una ventana adecuada para el estudio del fenomeno.
+
+Hay un problema! En principio no sabemos cual es $p_c{\infty}$. Como lo pongo en terminos de mi ventana? Sobre la ventana si tengo control, y puedo saber cuanto vale $p_c(L)$, haciendo estadistica. Para responder esta pregunta, lo siguiente.
+
+Arranco por aproximarme a $p_c{\infty}$ por izquierda, $p \rightarrow p_c(\infty)^{-}$. Eventualmente me choco con $p_c(L)$ que cumple en general $p_c(L) < p_c(\infty)$. Sin embargo, el "verdadero" sistema no percolo, solo mi ventana. Cuantos serian la cantidad de nodos que pertenecen al cluster percolante (masa)?
+
+$$p < p_c(\infty) \Rightarrow \lim_{L \rightarrow \infty} \frac{M}{L} = 0$$
+
+$$p = p_c(\infty) \Rightarrow \left\{\begin{matrix} \left.\begin{matrix} M < L^2 \\ L < M \end{matrix}\right\} M \simeq L^D; \; 1 < D < 2 \\ \lim_{L \rightarrow \infty} \frac{M}{L^D} \neq 0 \end{matrix}\right.$$
+
+
+Tenemos que esperamos que la masa del cluster percolante en la red de lado $L$ vaya como $L^D$, siendo $D$ la dimension fractal.
+
+Que pasa si me acerco por derecha? $p \rightarrow p_c(\infty)^{+}$
+
+Me va a pasar que $M \simeq L^d = L^2$. Voy a buscar resumir todo en una formula.
+
+$$M(L, \xi) = L^D m(\frac{l}{\xi}),\;\; \text{con} \; m(x) = \left\{ \begin{matrix} \text{cte} \;\;\; x<1 \\ x^{d - D} \;\; x >> 1 \end{matrix}\right.$$
+
+Es mas comodo sin embargo trabajar con la densidad de masa, $\rho$.
+
+$$\rho = \frac{M}{L} = L^{D-d} m(\frac{L}{\xi})$$
+
+$$\ln \rho = (D - 2)\ln L + \ln \left ( m(\frac{L}{\xi}) \right ) $$
+
+Para distintas probabilidades, se obtienen curvas que para $L$ chicos, son rectas y para grandes son constantes. Siempre debe valer que para cualquier $p$ debe valer la misma pendiente. (Este grafico es el que ama Claudio, hay que saberlo si o si!!!)
+
+![](./images/density_over_l.png)
+
+Esto te hace ver lo siguiente.
+
+* Si estoy en el entorno de $p_c$, para cualquier $p$ la deberia ver rectas paralelas.
+* El lugar donde las paralelas se planchan es donde vale que $\frac{L}{\xi}\simeq 1$.
+
+De esta manera me da informacion de que tan lejos estoy de $p_c$ y que tan correcta es mi eleccion de $L$.
+
+Dato: Tenemos que en la funcion de arriba, tenemos 2 partes. La parte de scaling $L^d$ (es lo que dice la teoria, la parte linda) y por otro lado la parte de las limitaciones computacionales $m(\frac{L}{\xi})$. Esto es scaling finito (`scaling` parte teorica, `finito` por la parte de limitaciones computaciones).
