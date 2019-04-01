@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
   int* dims;
   int* red;
 
-  int i, j, l, dim, _percola;
-  float p, p_c, p_c_squared;
+  int i, j, l, dim, _masa;
+  float p, p_c, p_c_squared, masa;
 
   dims = (int*)malloc(5 * sizeof(int));
   *dims = 4;
@@ -49,6 +49,8 @@ int main(int argc, char** argv) {
     dim = *(dims + l);
     p_c = 0.0;
     p_c_squared = 0.0;
+    masa = 0.0;
+
     for (i=0; i<repeticiones; i++) {
       p = 0.5;
       for (j=2; j<12; j++) {
@@ -57,18 +59,21 @@ int main(int argc, char** argv) {
         poblar(red, p, dim, semilla);
         clasificar(red, dim);
 
-        _percola = percola_y_masa(red, dim);
-        if (_percola) p = p - pow(2, -j);
+        _masa = percola_y_masa(red, dim);
+        if (_masa) p = p - pow(2, -j);
         else p = p + pow(2, -j);
 
         free(red);
       }
-      p_c = p_c + p;
-      p_c_squared = p_c_squared + p * p;
+      p_c = p_c + p / repeticiones;
+      p_c_squared = p_c_squared + p * p / repeticiones;
+      p_c_squared = p_c_squared + p * p / repeticiones;
+      masa = masa +
     }
     p_c = p_c / repeticiones;
     p_c_squared = p_c_squared / repeticiones;
-    printf("%d,%f,%f\n", dim, p_c, p_c_squared - pow(p_c, 2));
+    masa = masa + _masa /repeticiones;
+    printf("%d,%f,%f,%f\n", dim, p_c, p_c_squared - pow(p_c, 2), masa);
   }
   return 0;
 }
