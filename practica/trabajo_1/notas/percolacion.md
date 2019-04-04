@@ -277,3 +277,100 @@ Esto te hace ver lo siguiente.
 De esta manera me da informacion de que tan lejos estoy de $p_c$ y que tan correcta es mi eleccion de $L$.
 
 Dato: Tenemos que en la funcion de arriba, tenemos 2 partes. La parte de scaling $L^d$ (es lo que dice la teoria, la parte linda) y por otro lado la parte de las limitaciones computacionales $m(\frac{L}{\xi})$. Esto es scaling finito (`scaling` parte teorica, `finito` por la parte de limitaciones computaciones).
+
+----
+
+### Clase 5
+
+Notese que basicamente hay que medir la masa y la probabilidad critica.
+
+###### Dato
+> Si te da la memoria, guarda todo lo que puedas. Sirve guardar las configuraciones, por si en algun momento tenes que volver a correr algo.
+
+En la clase pasada vimos que:
+
+$$L \simeq \left |  p_c(L) - p_c(\infty) \right |^{-\nu}$$
+
+$$\xi \simeq \left |  p(L) - p_c(\infty) \right |^{-\nu}$$
+
+$$M = \text{masa del percolante} = L^D m\left( \frac{L}{\xi}\right), \; \text{con} \; m(x) = \left\{ \begin{matrix} \text{cte} \;\;\; x<1 \\ x^{d - D} \;\; x >> 1 \end{matrix}\right.$$
+
+Ademas es interesante medir la intensidad del cluster percolante, $P_{\infty}$.
+
+$$P_{\infty} = \text{intensidad percolante} = \frac{\text{\# de nodos del cluster percolante}}{\text{\# total de nodos}}$$
+
+Para identificar que el grafico de $P_{\infty}(p)$ es efectivamente una transicion de fase hay que identificar 2 cosas:
+
+* Cambio de comportamiento
+* Parametro de orden
+
+Viendo $p \rightarrow p_c(\infty)^{+}$, tenemos que:
+* Uno platea una hipotesis de _scaling_, diciendo lo siguiente
+
+  $$p = P_\infty + \sum_{s=0}^{<\infty}n_ss,$$
+
+  con $n_s$ el numero de clusters de tamaño $s$. Que pasa si evaluo esto en $p_c$?
+
+  $$p_c = \cancel{P_\infty(p = p_c)}^{\sim 0} + \sum_{s=0}^{<\infty}n_s(p=p_c)s$$
+
+  Supongo que $n_c(p_c) = q_0 s^{-\tau}$. Porque no le planteo una parte de _scaling finito_? En principio, porque estoy analizando simplemente la red infinita. Ademas, porque estoy para justo en $p_c$, y en lo alrededores vale que la parte contribuyente de _scaling finito_ es constante. Tenemos que $P_{\infty}$ es en el entorno de $p_c$ $P_\infty \simeq 0$,
+
+  $$p_c = \sum_{s=0}^\infty q_0 s^{1- \tau}$$
+
+  Para agregarle la flexibilidad de alejarse un poco del $p_c$ y que valgan las cosas agrego una funcion desconocida $f$ tal que
+
+  $$P_\infty = \sum_{s=0}^\infty q_0s^{1-\tau}[1 - f(z)],\; \text{con } z = (p - p_c)s^\sigma,$$
+
+  y pasando a la integral,
+
+  $$= \sum_0^\infty q_0 s^{1-\tau}[1 - f(z)]ds$$
+
+  Lo importante de esto, es que me quedo una ley de escala tal que
+
+  $$P_\infty = (p-p_c)^{\beta},\; \text{con}\; \beta = \frac{\tau - 2}{\sigma}$$
+
+Todo esto surgio de la hipotesis de que $n_s = q_0 s^{-\tau}$. Ya sabemos que para la red unidimensional $\tau=2$ y para Bethe es $\frac{5}{2}$. Para la red cuadrada?
+
+Recordemos las siguientes relaciones. Tenemos que
+
+$$\frac{M}{L^d} \sim \frac{L^D}{L^2} = L^{D-2} \sim |p - p_c|^{\nu(D-2)}$$
+
+Ademas, tambien encontramos que
+
+$$P_\infty \sim (p-p_c)^\beta \Rightarrow \beta = \nu(D-2) = -\nu(D-d)$$
+
+Por lo tanto ademas vale que
+
+$$\frac{\tau - 2}{\sigma} = \nu(d-D)$$
+
+$$\Rightarrow \tau = 2 + \nu \sigma (2-D)$$
+
+Como haria para obtener $\beta$? Tendria que hacer un ajuste sobre el grafico de $P_\infty(p)$. Dentro de un entornito sobre $p_c$ va a valer mi relacion y deberia poder obtener mi valor. Sin embargo, en un sistema finito, el corte no es abrupto y tengo todo suavizado, lo que complica las cosas. Conclusion, es muy mal negocio estimar $\beta$ directamente. Mas vale intentar estimar el $\tau$ y el $\sigma$. Tenemos que
+
+$$\ln n_s = -\tau \ln s + q_0$$
+
+Esto lo puedo sacar con un simple ajuste.
+
+###### Dato
+> $D_{\text{Teorico}} = \frac{91}{48}$
+
+Con que nos vamos a chocar en la realidad? Cuando vayamos a hacer el ejercicio 1.d nos vamos a chocar con que $\tau \simeq 1.85$, cuando sabemos que tiene que ser mayor a 2. El problema es que asumimos que $q_0$ no depende de $s$ y en verdad si. Volviendo al problema original, y haciendo algunos reemplazos, vale que
+
+$$q_0 = \frac{p_c}{\sum_{s=0}^\infty s^{1-\tau}} = \frac{p_c}{\Xi(\tau - 1)}$$
+
+con $\Xi$ la funcion de Riemann. Para poder medir esto bien, voy a tener que usar $\chi^2$.
+
+Sabemos que el error cuadratico va a ser:
+
+$$\chi^2 = \sum_{i=1}^N \left | y_i - (-\tau x_i + b(\tau))\right|^2$$
+
+Para encontrar la mejor vario $\tau$, teniendo en cuenta que la ordenada al origen tambien depende de este $\tau$. Es un ajuste lineal, en el sentido que uno ajusta una linea, pero la diferencia con un ajuste "normal" es que tengo un solo parametro $\tau$ que me determina ambos la pendiente y la ordenada. El valor teorico, es
+
+###### Dato
+> $\tau_{\text{Teorico}} = 2.05$
+
+Una manera de encontrar $p_c(L)$ es buscar $p$ tal que vale esta ley de potencias, buscando minimizar $\chi^2$ al valor mas chico posible.
+
+
+###### Dato
+> Me tengo que guardar tambien la distribucion de tamaños. Necesito la masa y los $n_s$.

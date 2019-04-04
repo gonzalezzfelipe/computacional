@@ -2,178 +2,18 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define A 16807
-#define M 2147483647
-#define Q 127773
-#define R 2836
-#define S 260572
-#define T 10000
-#define B 10
+#include "random_numb.h"
+#include "auxiliares.h"
 
-float random_numb(int *p);
-
+int percola(int *red, int dim);
 int poblar(int* red, float p, int dim, int *semilla);
+int limpiar_etiquetas(int *red, int *historial, int dim);
 int clasificar(int* red, int dim);
-int percola_y_masa(int *red, int dim);
-
 int etiqueta_falsa(int *valor, int *historial, int s1, int s2);
 int actualizar(int* valor, int up, int left, int* frag, int* historial);
 
-int printred(int* red, int dim);
 
-int main(int argc, char** argv) {
-  int* semilla;
-  int repeticiones;
-
-  semilla = (int*)malloc(sizeof(int));
-
-  sscanf(argv[1], "%d", &repeticiones);
-  if (argc == 3) sscanf(argv[2], "%d", &*semilla);
-  else *semilla = 1;
-
-  int* dims;
-  int* red;
-
-  int i, j, l, dim, _masa;
-  float p, p_c, p_c_squared, masa;
-
-  dims = (int*)malloc(5 * sizeof(int));
-  *dims = 4;
-  *(dims + 1) = 16;
-  *(dims + 2) = 32;
-  *(dims + 3) = 64;
-  *(dims + 4) = 128;
-
-  printf("%s,%s,%s,%s\n", "L", "p_c", "var", "masa");
-  for (l=0; l<5; l++) {
-    dim = *(dims + l);
-    p_c = 0.0;
-    p_c_squared = 0.0;
-    masa = 0.0;
-
-    for (i=0; i<repeticiones; i++) {
-      p = 0.5;
-      for (j=2; j<12; j++) {
-
-        red = (int*)malloc(dim * dim * sizeof(int));
-        poblar(red, p, dim, semilla);
-        clasificar(red, dim);
-
-        _masa = percola_y_masa(red, dim);
-        if (_masa) p = p - pow(2, -j);
-        else p = p + pow(2, -j);
-
-        free(red);
-      }
-      p_c = p_c + p / repeticiones;
-      p_c_squared = p_c_squared + p * p / repeticiones;
-      p_c_squared = p_c_squared + p * p / repeticiones;
-      masa = masa +
-    }
-    p_c = p_c / repeticiones;
-    p_c_squared = p_c_squared / repeticiones;
-    masa = masa + _masa /repeticiones;
-    printf("%d,%f,%f,%f\n", dim, p_c, p_c_squared - pow(p_c, 2), masa);
-  }
-  return 0;
-}
-
-
-// Auxiliares {{{
-
-
-// int prueba() {
-//   int* semilla;
-//
-//   semilla = (int*)malloc(sizeof(int));
-//   *semilla = 1;
-//
-//   int* red;
-//
-//   int i, j, l, dim, _percola;
-//   float p, p_c, p_c_squared;
-//
-//   dim = 5;
-//   p = 0.6;
-//
-//   red = (int*)malloc(dim * dim * sizeof(int));
-//   poblar(red, p, dim, semilla);
-//   printred(red, dim);
-//   clasificar(red, dim);
-//   printred(red, dim);
-//   _percola = percola_y_masa(red, dim);
-//   printf("%d\n", _percola);
-//
-//   return 0;
-// }
-
-
-int printred(int* red, int dim) {
-  /*
-  Imprimir la red de percolacion.
-
-  Funcion auxiliar para chequear que la red se genera correctamente.
-  */
-  int i, j;
-
-  for (i=0; i<dim; i=i+1) {
-    for (j=0; j<dim; j=j+1) {
-      printf("%2d ", *(red + dim * i + j));
-    }
-    printf("\n");
-  }
-  printf("\n");
-  return 0;
-}
-
-
-int printvec(int* vec, int dim) {
-  /*
-  Printear vector con puntero de dimension dim.
-  */
-  int i;
-
-  for (i=0; i < dim; i=i+1) printf("%d\n", *(vec + i));
-  return 0;
-}
-
-
-float random_numb(int *semilla) {
-  /*
-  Devuelve un numero aleatorio entre 0.0 y 1.0.
-
-  Metodo de Park y Miller.
-  */
-  int k;
-  float x;
-
-  k=(*semilla)/Q;
-  *semilla=A*(*semilla-k*Q)-R*k;
-  if (*semilla<0) *semilla+=M;
-
-  x=(*semilla)*(1.0/M);
-
-  return x;
-  }
-
-
-int pointerrange(int* vec, int start, int end) {
-  /*
-  Llenar vector puntero con range(0, dim * dim /2)
-
-  Funcion auxiliar para chequear que la red se genera correctamente.
-  */
-  int i;
-
-  for (i=start; i<end; i=i+1) *(vec + i) = i;
-  return 0;
-}
-
-
-// }}}
-
-
-int percola_y_masa(int *red, int dim) {
+int percola(int *red, int dim) {
   /* Saber si percola o no la red.
 
   Para determinarlo se toman dos vectores auxiliares de dimension dim,
@@ -184,13 +24,13 @@ int percola_y_masa(int *red, int dim) {
   */
   int* primera_fila;
   int* ultima_fila;
-  int i, suma, etiqueta;
+  int i, suma;
 
   primera_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
   ultima_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
 
   // Me aseguro que mis vectores tengan solo ceros
-  for (i=0; i < dim; i++) {
+  for (i=0; i < dim * dim / 2; i++) {
     *(primera_fila + i) = 0;
     *(ultima_fila + i) = 0;
   }
@@ -201,29 +41,13 @@ int percola_y_masa(int *red, int dim) {
     *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
   }
 
-  // Multiplico elemento a elemento, dejando el resultado en suma
   suma = 0;
-  for (i=0; i < dim; i++) suma = suma + *(primera_fila + i) * *(ultima_fila + i);
-
-  i = 0;
-  etiqueta = 0;
-
-  while (i < dim) {
-    if (*(primera_fila + i) * *(ultima_fila + i)) {
-      etiqueta = *(primera_fila + i);
-      break;
-    }
-    i++;
-  }
+  for (i=0; i < dim * dim / 2; i++) suma += *(primera_fila + i) * *(ultima_fila + i);
 
   free(primera_fila);
   free(ultima_fila);
 
-  if (etiqueta) {
-    suma = 0;
-    for (i=0; i < dim * dim; i++) if (*(red + i) == etiqueta) suma++;
-    return suma;
-  }
+  if (suma) return 1;
   else return 0;
 }
 
