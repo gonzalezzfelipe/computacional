@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "percolacion.h"
 
@@ -10,7 +11,7 @@ int a(
   int precision,
   char filename[20],
   int* dims);
-int b(int repeticiones, int* semilla, char filename[20], int* dims);
+int resto(int repeticiones, int* semilla, int* dims);
 
 
 int main(int argc, char** argv) {
@@ -19,8 +20,7 @@ int main(int argc, char** argv) {
     int repeticiones; // Cantidad de veces que repito para cada L.
     int* semilla;  // Semilla inicial para el generador de numeros pseudo aleatorios
     int precision;  // Precision a la que mido (1 / (2 ^ precision))
-    char filename_a[20] = "valores_a.csv";  // Nombre del archivo al cual escribir los resultados
-    char filename_b[20] = "valores_b.csv";  // Nombre del archivo al cual escribir los resultados
+    // char filename_a[20] = "valores_a.csv";  // Nombre del archivo al cual escribir los resultados
 
     semilla = (int*)malloc(sizeof(int));
 
@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
   *(dims + 3) = 64;
   *(dims + 4) = 128;
 
-  a(repeticiones, semilla, precision, filename_a, dims);
-  // b(repeticiones, semilla, filename_b, dims);
+  // a(repeticiones, semilla, precision, filename_a, dims);
+  resto(repeticiones, semilla, dims);
 
   free(dims);
 
@@ -96,7 +96,7 @@ int a(
 }
 
 
-int b(int repeticiones, int* semilla, char filename[20], int* dims) {
+int resto(int repeticiones, int* semilla, int* dims) {
   /* Encontrar p_c haciendo un barrido de las probabilidades, encontrando F(p)
 
   Para este ejercicio hay que hacer un barrido de paso 0.01 con 27000
@@ -106,28 +106,44 @@ int b(int repeticiones, int* semilla, char filename[20], int* dims) {
   FILE* fp;  // File to write to
 
   int* red;
+  int* frags;
 
   int i, j, l, dim;
+  char dimstr[10];
   float p, f;
 
-  fp = fopen(filename,"w");
 
-  fprintf(fp, "%s,%s,%s\n", "L", "p", "F(p)");
   for (l=0; l<5; l++) {
     dim = *(dims + l);
+    sprintf(dimstr, "%d", dim);
+    strcat(dimstr, ".dat");
+    fp = fopen(dimstr, "w");
+
+    fprintf(fp, "%s,%s,%s", "L", "p", "F(p)");
+    for (i = 1; i < dim * dim / 2; i++) fprintf(fp, ",%d", i);
+    fprintf(fp, "\n");
 
     for (j = 1; j < 100; j++){
       p = j / 100.0;
       f = 0.0;
+
+      frags = (int*)malloc(dim * dim * sizeof(int) / 2);
+      for (i = 0; i < dim * dim / 2; i++) *(frags + i) = 0;
       for (i = 0; i < repeticiones; i++) {
+
         red = (int*)malloc(dim * dim * sizeof(int));
+
         poblar(red, p, dim, semilla);
         clasificar(red, dim);
+        fragmentos(red, dim, frags);
+
         f += percola(red, dim) / 1.0 / repeticiones;
       }
-      fprintf(fp, "%d,%f,%f\n", dim, p, f);
+      fprintf(fp, "%d,%f,%f", dim, p, f);
+      for (i = 1; i < dim * dim / 2; i++) fprintf(fp, ",%f", *(frags + i) / 1.0 / repeticiones);
+      fprintf(fp, "\n");
     }
+    fclose (fp);
   }
-  fclose (fp);
   return 0;
 }
