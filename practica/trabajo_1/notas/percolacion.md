@@ -367,10 +367,74 @@ $$\chi^2 = \sum_{i=1}^N \left | y_i - (-\tau x_i + b(\tau))\right|^2$$
 Para encontrar la mejor vario $\tau$, teniendo en cuenta que la ordenada al origen tambien depende de este $\tau$. Es un ajuste lineal, en el sentido que uno ajusta una linea, pero la diferencia con un ajuste "normal" es que tengo un solo parametro $\tau$ que me determina ambos la pendiente y la ordenada. El valor teorico, es
 
 ###### Dato
-> $\tau_{\text{Teorico}} = 2.05$
+> $\tau_{\text{Teorico}} \simeq 2.05$
 
 Una manera de encontrar $p_c(L)$ es buscar $p$ tal que vale esta ley de potencias, buscando minimizar $\chi^2$ al valor mas chico posible.
 
 
 ###### Dato
 > Me tengo que guardar tambien la distribucion de tamaños. Necesito la masa y los $n_s$.
+
+----
+
+### Clase 6
+
+#### Relaciones entre exponentes criticos
+
+$$\left \{ \begin{matrix} \tau = 2 + \nu \sigma (d - D) \\  \beta = 2  \nu (d-D) \end{matrix}\right.$$
+
+* $\tau$ sale del 1.d.
+* $\beta$ sale del problema 2.
+* $d=2$
+* $D$ sale de la masa.
+* $\nu$ sale de $\frac{M}{L^2}$.
+
+Hasta ahora hay 2 cosas muy importantes. La masa, y la distribucion de frgmentos $n_s$.
+
+#### Distribucion de fragmentos.
+
+* Para $p < p_c$ hay "pocos" fragmentos y finitos.
+* Para $p > p_c$ hay "pocos" fragmentos pero muy grandes. Caso limite, 1 solo, unico cluster.
+* Para $p \sim p_c$, tengo muchos fragmentos. Es facil de ver acordandose que el sistema es invariante de escalas, por lo que tengo que tener cluster de todas las escalas. Particularmente, para $p = p_c$ espero maximo numero de fragmentos.
+
+En $p_c$ los clusters que se forman son **fractales**. Otra forma de encontrar $p_c(L)$ es fijarse para que $p$ tengo maxima cantidad de fragmentos.
+
+Recordar que $<n_s(p_c)> = q_0 s^{-\tau}$. Con esto puedo calcular $\tau$, graficando $<n_s(p=p_c(L))>(s)$ en escala logaritmica. hay que acordarse ademas que $q_0$ depende de $\tau$, a la hora de hacer el ajuste. Cuando $p \neq p_c$, deja de parecerse a una recta y se "cae" al final.
+
+Tenemos lo siguiente:
+
+$$\frac{<n_s(p)>}{<n_s(p_c(L))>} = f(g(s), \frac{p - p_c}{p_c} = \epsilon)$$
+
+$$g(s) \epsilon = f^{-1}\left ( \frac{<n_s(p)>}{<n_s(p_c(L))>} \right)$$
+
+$$g(s) = \frac{1}{ \epsilon}f^{-1}\left ( \frac{<n_s(p)>}{<n_s(p_c(L))>} \right)$$
+
+Intuyo que, dentro de un entorno pequeño, esta funcion no puede ser muy compleja, y que $f^{-1}$ tiene un maximo y un minimo (no veo bien porque).
+
+$$g(s) \sim (p - p_c)^{-1}f^{-1}$$
+
+Cuando ocurre la mayor cantidad de fragmentos, defino $p \equiv p_{MAX}$. En este punto, vale (aunque no trivialmente)
+
+$$\left \{ \begin{matrix} p = p_{MAX} \\ f = f_{MAX} \end{matrix}\right.$$
+
+$$\Rightarrow g(s) = (p_{MAX} - p_c)^{-1}f_{MAX}^{-1}$$
+
+En resumidas cuantas, lo que hay que hacer es graficar $\ln (p_{MAX} - p_c)$ en funcion de $s$, y voy a tener una recta, cuya pendiente va a ser $-\sigma$.
+
+###### Procedimiento
+
+> Movernos en el entorno  de $p$ de $[0.58, 0.60]$, mas que eso no es necesario.
+
+1. Conseguir $\frac{<n_s(p)>}{<n_s(p_c(L))>}$.
+2. Recordamos que $\frac{<n_s(p)>}{<n_s(p_c(L))>} = f(z)$, con $z = s^\sigma (p - p_c)$.
+3. Tenemos un punto que conocemos, en $f(z=0) = 1$.
+4. Graficando $f(z)$ para todos los $s$ encontramos $f_{MAX}$, que corresponde a un $p_{MAX}$.
+
+##### Consejos
+
+1. La curva de $f(z)$ es probable que de muy mal. A chequear:
+    * Escala logaritmica, para que quede todo mas comprimido y lindo.
+    * Ir agregando los $s$ de a poco chequeando que entren en una curva. Si $s$ es muy chico o muy grande, rompen todo por efectos de borde.
+        * Puede pasa que al agregar un $s$, quede lindo, pero corrido. Eso puede ser un error en el $p_c$.
+    * Chequear que $f(0) = 1$.
+2. Esta semana tienen que estar los programas para calcular. Logrado eso, ponerse a correr todo. Guardarlo, y despues analizar.

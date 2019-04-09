@@ -31,14 +31,14 @@ int main(int argc, char** argv) {
 
   int* dims;
   dims = (int*)malloc(5 * sizeof(int));
-  *dims = 4;
+  *(dims + 0) = 4;
   *(dims + 1) = 16;
   *(dims + 2) = 32;
   *(dims + 3) = 64;
   *(dims + 4) = 128;
 
-  // a(repeticiones, semilla, precision, filename_a, dims);
-  b(repeticiones, semilla, filename_b, dims);
+  a(repeticiones, semilla, precision, filename_a, dims);
+  // b(repeticiones, semilla, filename_b, dims);
 
   free(dims);
 
@@ -70,24 +70,25 @@ int a(
   fp = fopen(filename,"w");
 
   fprintf(fp, "%s,%s\n", "L", "p_c");
-  for (l=0; l<5; l++) {
+  for (l = 0; l < 5; l++) {
     dim = *(dims + l);
 
-    for (i=0; i<repeticiones; i++) {
-      p = 0.5;
-      for (j=2; j<12; j++) {
+    red = (int*)malloc(dim * dim * sizeof(int));
 
-        red = (int*)malloc(dim * dim * sizeof(int));
+    for (i = 0; i < repeticiones; i++) {
+      p = 0.5;
+      for (j = 2; j < 12; j++) {
+
         poblar(red, p, dim, semilla);
         clasificar(red, dim);
 
         percolo = percola(red, dim);
         if (percolo) p = p - pow(2, -j);
         else p = p + pow(2, -j);
-
       }
       fprintf(fp, "%d,%f\n", dim, p);
     }
+    free(red);
   }
   fclose (fp);
   return 0;
