@@ -12,6 +12,7 @@ int a(
   int* dims);
 int b(int repeticiones, int* semilla, char filename[20], int* dims);
 
+
 int main(int argc, char** argv) {
   // Argumentos de linea de comando
 

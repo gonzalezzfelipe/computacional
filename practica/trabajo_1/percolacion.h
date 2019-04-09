@@ -6,11 +6,35 @@
 #include "auxiliares.h"
 
 int percola(int *red, int dim);
+int fragmentos(int *red, int dim, int *frags);
 int poblar(int* red, float p, int dim, int *semilla);
 int limpiar_etiquetas(int *red, int *historial, int dim);
 int clasificar(int* red, int dim);
 int etiqueta_falsa(int *valor, int *historial, int s1, int s2);
 int actualizar(int* valor, int up, int left, int* frag, int* historial);
+
+
+int fragmentos(int *red, int dim, int *frags) {
+  /* Devuelve la cantidad de fragmentos de tamaño s en la red.
+
+  El resultado se guarda en `fragmentos`, siendo el valor en la posicion
+  *(fragmentos + i) la cantidad de clusters de tamaño i.
+  */
+  int i;
+  int* contador;
+
+  contador = (int*)malloc(sizeof(int) * dim * dim / 2);  // Maxima cantidad posible de etiquetas
+
+  for (i = 0; i < dim * dim / 2; i++) {
+      *(frags + i) = 0;
+      *(contador + i) = 0;
+    }
+  for (i = 0; i < dim * dim / 2; i++) *(contador + i) = 0;
+  for (i = 0; i < dim * dim; i++) ++*(contador + *(red + i));
+  for (i = 0; i < dim * dim / 2; i++) ++*(frags + *(contador + i));
+  *(frags) = 0;
+  return 0;
+}
 
 
 int percola(int *red, int dim) {
