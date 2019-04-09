@@ -28,7 +28,6 @@ int fragmentos(int *red, int dim, int *frags) {
 
   contador = (int*)malloc(sizeof(int) * dim * dim / 2);  // Maxima cantidad posible de etiquetas
 
-  for (i = 0; i < dim * dim / 2; i++) {*(contador + i) = 0;}
   for (i = 0; i < dim * dim / 2; i++) *(contador + i) = 0;
   for (i = 0; i < dim * dim; i++) ++*(contador + *(red + i));
   for (i = 0; i < dim * dim / 2; i++) ++*(frags + *(contador + i));
