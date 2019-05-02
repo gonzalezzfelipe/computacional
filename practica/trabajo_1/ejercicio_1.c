@@ -5,12 +5,7 @@
 
 #include "percolacion.h"
 
-int a(
-  int repeticiones,
-  int* semilla,
-  int precision,
-  char filename[20],
-  int* dims);
+int a(int repeticiones, int* semilla, int precision, int* dims);
 int resto(int repeticiones, int* semilla, int* dims);
 
 // Helpers
@@ -23,7 +18,6 @@ int main(int argc, char** argv) {
     int repeticiones; // Cantidad de veces que repito para cada L.
     int* semilla;  // Semilla inicial para el generador de numeros pseudo aleatorios
     int precision;  // Precision a la que mido (1 / (2 ^ precision))
-    // char filename_a[20] = "valores_a.csv";  // Nombre del archivo al cual escribir los resultados
 
     semilla = (int*)malloc(sizeof(int));
 
@@ -41,10 +35,8 @@ int main(int argc, char** argv) {
   *(dims + 3) = 64;
   *(dims + 4) = 128;
 
-  // a(repeticiones, semilla, precision, filename_a, dims);
-  resto(repeticiones, semilla, dims);
-
-  free(dims);
+  a(repeticiones, semilla, precision, dims);
+  // resto(repeticiones, semilla, dims);
 
   return 0;
 }
@@ -54,7 +46,6 @@ int a(
     int repeticiones,
     int* semilla,
     int precision,
-    char filename[20],
     int* dims) {
   /* Encontrar p_c haciendo una busqueda binaria.
 
@@ -71,7 +62,7 @@ int a(
   int i, j, l, dim, percolo;
   float p;
 
-  fp = fopen(filename,"w");
+  fp = fopen("valores_a.dat","w");
 
   fprintf(fp, "%s,%s\n", "L", "p_c");
   for (l = 0; l < 5; l++) {
@@ -116,7 +107,7 @@ int resto(int repeticiones, int* semilla, int* dims) {
   float p, f;
 
 
-  for (l=0; l<5; l++) {
+  for (l=4; l<5; l++) {
     dim = *(dims + l);
     sprintf(dimstr, "%d", dim);
     strcat(dimstr, ".dat");
@@ -138,8 +129,11 @@ int resto(int repeticiones, int* semilla, int* dims) {
         fragmentos(red, dim, frags);
 
         f += percola(red, dim) / 1.0 / repeticiones;
+
+        free(red);
       }
       escribir_linea(fp, dim, p, f, frags, repeticiones);
+      free(frags);
     }
     fclose (fp);
   }
@@ -157,7 +151,7 @@ int ultimo_ocupado(int* frags, int len) {
 int escribir_linea(FILE* fp, int dim, float p, float f, int* frags, int repeticiones){
   // Escribir linea en el csv.
   int i;
-  
+
   fprintf(fp, "%d,%f,%f", dim, p, f);
 
   fprintf(fp, ",\"[");
