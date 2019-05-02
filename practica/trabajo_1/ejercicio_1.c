@@ -13,6 +13,9 @@ int a(
   int* dims);
 int resto(int repeticiones, int* semilla, int* dims);
 
+// Helpers
+int ultimo_ocupado(int* frags, int len);
+int escribir_linea(FILE* fp, int dim, float p, float f, int* frags, int repeticiones);
 
 int main(int argc, char** argv) {
   // Argumentos de linea de comando
@@ -119,10 +122,7 @@ int resto(int repeticiones, int* semilla, int* dims) {
     strcat(dimstr, ".dat");
     fp = fopen(dimstr, "w");
 
-    fprintf(fp, "%s,%s,%s", "L", "p", "F(p)");
-    for (i = 1; i < dim * dim / 2; i++) fprintf(fp, ",%d", i);
-    fprintf(fp, "\n");
-
+    fprintf(fp, "%s,%s,%s,%s\n", "L", "p", "F(p)", "fragmentos");
     for (j = 1; j < 100; j++){
       p = j / 100.0;
       f = 0.0;
@@ -139,11 +139,31 @@ int resto(int repeticiones, int* semilla, int* dims) {
 
         f += percola(red, dim) / 1.0 / repeticiones;
       }
-      fprintf(fp, "%d,%f,%f", dim, p, f);
-      for (i = 1; i < dim * dim / 2; i++) fprintf(fp, ",%f", *(frags + i) / 1.0 / repeticiones);
-      fprintf(fp, "\n");
+      escribir_linea(fp, dim, p, f, frags, repeticiones);
     }
     fclose (fp);
   }
+  return 0;
+}
+
+
+int ultimo_ocupado(int* frags, int len) {
+  /* Busca la posicion del ultimo elemento no nulo del vector.*/
+  while (*(frags + len - 1) == 0) len--;
+  return len;
+}
+
+
+int escribir_linea(FILE* fp, int dim, float p, float f, int* frags, int repeticiones){
+  // Escribir linea en el csv.
+  int i;
+  
+  fprintf(fp, "%d,%f,%f", dim, p, f);
+
+  fprintf(fp, ",\"[");
+  for (i = 1; i < ultimo_ocupado(frags, dim * dim / 2); i++) {
+    fprintf(fp, "%f,", *(frags + i) / 1.0 / repeticiones);
+  }
+  fprintf(fp, "0]\"\n");
   return 0;
 }
