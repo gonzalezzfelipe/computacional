@@ -23,7 +23,9 @@ int fill_exps(float* exps, float j, float b);
 int fill(int* array, int size, int* seed){
   /* Fill Ising array with 1 and -1 using random seed.*/
   int i;
-  for (i = 0; i < size * size; i++) *(array + i) = (int)(2 * random_numb(seed)) * 2 - 1;
+  for (i = 0; i < size * size; i++){
+    *(array + i) = (int)(2 * random_numb(seed)) * 2 - 1;
+  }
   return 0;
 }
 
