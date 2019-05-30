@@ -50,11 +50,11 @@ float energy(int* array, int size, float j, float b){
 
 
 float flip(
-  int* array,
-  int size,
-  float j,
-  float b,
-  int* seed,
+    int* array,
+    int size,
+    float j,
+    float b,
+    int* seed,
     float* exps){
   /* Flip spin and decide wether to accept new spin configuration.
 
@@ -126,8 +126,8 @@ int fill_exps(float* exps, float j, float b){
   int i;
 
   for (i = 0; i < 5; i++){
-    *(exps + i) = exp(+ 2 * b + 4 * (i - 2) * j);
-    *(exps + 5 + i) = exp(- 2 * b + 4 * (i - 2) * j);
+    *(exps + i) = exp(+ 2 * b - 4 * (i - 2) * j);
+    *(exps + 5 + i) = exp(- 2 * b - 4 * (i - 2) * j);
   }
   return 0;
 }

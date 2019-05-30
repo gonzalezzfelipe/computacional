@@ -1,0 +1,143 @@
+\documentclass[%
+ reprint,
+ amsmath,amssymb,
+ aps,
+]{revtex4-1}
+
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{bm}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{Ising 2D}
+
+\author{Felipe Gonzalez}
+
+\affiliation{%
+ Departamento de F\'\i sica, Facultad de Ciencias Exactas y Naturales, Universidad de Buenos Aires,\\
+ Pabell\'on I, Ciudad Universitaria, 1428 Buenos Aires, Argentina.
+}
+
+\date{\today}
+
+\begin{abstract}
+Se estudio la evoluci\'on de un sistema de Ising ...
+
+
+\begin{description}
+\item[PACS numbers]
+45.70.Vn, 89.65.Lm
+\end{description}
+\end{abstract}
+
+\pacs{45.70.Vn, 89.65.Lm}
+
+\maketitle
+
+\section{\label{intro}Introducci\'on}
+
+El modelo de Ising es un modelo f\'isico desarrollado para estudiar el
+comportamiento de materiales ferromagnéticos, pero que es de inter\'es para el
+estudio de fen\'omenos cr\'iticos en general. Es el modelo paradigm\'atico para
+el estudio de transiciones de fase, presentando una de ellas cuando la
+temperatura del sistema decrece a un valor cr\'itico tal que surge
+magnetizaci\'on espont\'anea.
+
+Este modelo fue inventado por el f\'isico Wilhelm Lenz, que lo concibió
+como un problema para su alumno Ernst Ising para demostrar que el sistema
+presentaba una transici\'on de fase. Ising demostró que en una dimensión
+no existía tal transici\'on de fase, resolviéndolo en su tesis de 1924. El modelo
+bidimensional de Ising de retícula cuadrada solo pudo ser descripto
+analíticamente mucho más tarde, por Lars Onsager, que demostró que
+efectivamente se encuentra una transici\'on de fase a un temperatura cr\'itica
+$T_c > 0$\cite{Onsager}.
+
+\section{\label{theory}El modelo}
+
+El modelo de Ising se constituye por un arreglo bidimensional de espines
+est\'aticos con orientaci\'on \textit{up} o \textit{down}, los cuales
+evolucionan de manera "aleatoria" en funci\'on de la temperatura de la muestra
+y la energ\'ia de interacci\'on entre espines. Esta evoluci\'on esta
+caracterizada por un Metropolis Monte Carlo, el cual ser\'a explicado en la
+proxima secci\'on.
+
+\subsection{\label{transition}Metropolis Monte Carlo}
+
+\subsection{\label{transition}Modelo de Ising}
+
+El modelo de Ising estudiado consiste en una red bidimensional infinita,
+rellena de espines con proyecci\'on \textit{up} o \textit{down}, caracterizada
+por el siguiente Hamiltoniano.
+
+\begin{equation}
+  H = - \sum_i^N s_i B - J \sum_{<i, j>} s_i s_j,
+\end{equation}
+
+siendo, $s_i$ la proyecci\'on de cada esp\'in, $B$ un campo magn\'etico externo,
+$J$ la energia de interacci\'on entre cada par de esp\'i y $<i, j>$ simboliza la
+sumatoria que cuenta \'unicamente los primeros vecinos de cada esp\'in. Vemos que
+no contamos con una energ\'a cin\'etica, por lo que cada esp\'in se encuentra
+est\'atico.
+
+Existen soluciones anal\'iticas para este problema. Para el caso de $J = 0, B
+\neq 0$ tenemos que el problema se puede resolver plantenado un sistema
+can\'onico, en el cual cada esp\'in no interactua por lo que se puede plantear
+lo siguiente.
+
+% Solucion para J = 0, buscar en carpeta de Teo 3.
+
+Otro caso muy interesante es el caso de $B = 0, J \neq 0$. Para este caso,
+Onsager\cite{Onsager} demuestra que existe $T_c = \frac{}{}$ tal que para $T <
+T_c$ se tiene que ocurre magnetizaci\'on espontanea, que corresponde a una
+transici\'on de fase de segundo orden (continua, con derivada discontinua) cuyo
+par\'ametro de orden es la magnetizaci\'on media de la red.
+
+Sobre este trabajo se utiliza la siguiente convenci\'on, en la cual se toma
+$k_b = 1$, $J \rightarrow \frac{J}{T}$ y $B \rightarrow \frac{B}{T}$.
+
+
+\section{\label{simulations}Simulaciones num\'ericas}
+
+Para realizar simulaciones num\'ericas cuya validez se sostenga, se tuvo
+especial cuidado con las siguientes cuestiones.
+
+Se comenz\'o por realizar un estudio sobre longitud de correlaci\'on y
+termalizacion de la red en funcion de los distintos valores de temperatura, en
+pos de asegurar que las muestras tomadas sean representativas de la temperatura
+en la cual se setea el sistema. Para esto se realizo un barrido para $J \in
+[0.1, 0.6]$, en una red de lado $L = 32$ con $300.000$ pasos,
+con $300.000 >> L^2 = 1024$, con la intenci\'on de estar completamente seguro
+de que para cada $J$ se llega a un estaodo representativo de la temperatura y
+que no corresponde a un transitorio, sino al estacionario. Sobre la figura ...
+se puede ver la magnetizaci\'on media de la muestra en funcion de cada paso,
+para $J < J_c$ y $J > J_c$. Vemos que para temperaturas bajas $(J > J_c)$
+tenemos que la cantidad de pasos para termalizar el sistema se vuelve muy
+grande superando ampliamente el estimado inicial de $L^2$, mientras que para
+$J < J_c$ el sistema llega a un estado representativo de la temperatura en
+relativamente pocos casos.
+
+Otro fen\'omeno interesante surge al estudiar la correlaci\'on de las
+mediciones. Vemos en la figura ... que para $J \simeq J_c$, la muestra muestra
+una gran correlaci\'on para varios pasos, ya que se puede ver una especie de
+"forma funcional" para puntos separados por muchos mas de $L^2$ pasos,
+comparado con el caso de $J < J_c$. Comparando las longitudes de correlaci\'on
+(figura ...) se vuelve muy claro como para $J_c$ es importante que el sampleo
+de magnitudes ocurra cada una gran cantidad de pasos, en pos de asegurar
+descorrelaci\'on entre mediciones.
+
+\section{\label{results}Resultados}
+
+\subsection{\label{p_c} Determinaci\'on de $p_c(\infty)$ y $\nu$, y $\tau$}
+
+\section{\label{conclusions}Conclusiones}
+
+
+
+\appendix
+%\bibliography{apssamp}% Produces the bibliography via BibTeX.
+\bibliography{apspaper}% Produces the bibliography via BibTeX.
+
+\end{document}

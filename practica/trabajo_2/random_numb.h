@@ -9,8 +9,6 @@
 #define T 10000
 #define B 10
 
-float random_numb(int *p);
-
 
 float random_numb(int *semilla) {
   /*
