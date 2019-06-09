@@ -12,6 +12,7 @@ int limpiar_etiquetas(int *red, int *historial, int dim);
 int clasificar(int* red, int dim);
 int etiqueta_falsa(int *valor, int *historial, int s1, int s2);
 int actualizar(int* valor, int up, int left, int* frag, int* historial);
+int masa(int *red, int dim);
 
 
 int fragmentos(int *red, int dim, int *frags) {
@@ -47,7 +48,7 @@ int percola(int *red, int dim) {
   */
   int* primera_fila;
   int* ultima_fila;
-  int i, suma;
+  int i, label;
 
   primera_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
   ultima_fila = (int*)malloc(dim * dim / 2 * sizeof(int));
@@ -64,14 +65,18 @@ int percola(int *red, int dim) {
     *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
   }
 
-  suma = 0;
-  for (i=0; i < dim * dim / 2; i++) suma += *(primera_fila + i) * *(ultima_fila + i);
+  label = 0;
+  i = 0;
+  while (label == 0 & i < dim * dim / 2) {
+    label = *(primera_fila + i) * *(ultima_fila + i);
+    i++;
+  }
+  if (label) label = *(primera_fila + i - 1);
 
   free(primera_fila);
   free(ultima_fila);
 
-  if (suma) return 1;
-  else return 0;
+  return label;
 }
 
 
@@ -85,7 +90,7 @@ int poblar(int* red, float p, int dim, int *semilla) {
   */
   int i;
 
-  for (i=0; i<dim*dim; i=i+1) {
+  for (i = 0; i < dim * dim; i++) {
     *(red + i) = 0;
     if (random_numb(semilla) < p) {
       *(red + i) = 1;
@@ -207,3 +212,46 @@ int actualizar(int* valor, int up, int left, int* frag, int* historial) {
     }
   return 0;
   }
+
+
+int masa(int *red, int dim) {
+  /* Obtener masa del cluster percolante.
+
+  Si no hay, devuelve 0.
+  */
+  int* primera_fila;
+  int* ultima_fila;
+  int i, suma;
+  int etiqueta;
+
+  primera_fila = (int*)malloc(dim * dim * sizeof(int));
+  ultima_fila = (int*)malloc(dim * dim  * sizeof(int));
+
+  // Me aseguro que mis vectores tengan solo ceros
+  for (i=0; i < dim * dim / 2; i++) {
+    *(primera_fila + i) = 0;
+    *(ultima_fila + i) = 0;
+  }
+
+  // Pueblo mis vectores de etiquetas
+  for (i=0; i < dim; i++) {
+    *(primera_fila + *(red + i)) = *(red + i);
+    *(ultima_fila + *(red + (dim - 1) * dim + i)) = *(red+ (dim - 1) * dim + i);
+  }
+
+  suma = 0;
+  i = 0;
+  while (suma == 0 & i < dim * dim / 2) {
+    suma += *(primera_fila + i) * *(ultima_fila + i);
+    i++;
+  }
+  if (suma) {
+    suma = 0;
+    etiqueta = *(primera_fila + i - 1);
+    for (i = 0; i < dim * dim; i++) if (*(red + i) == etiqueta) suma++;
+  }
+  free(primera_fila);
+  free(ultima_fila);
+
+  return suma;
+}
