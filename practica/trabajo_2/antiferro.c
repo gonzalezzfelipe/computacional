@@ -38,36 +38,35 @@ int main(int argc, char** argv){
     else termalization = size * size;
     if (argc >= 5) sscanf(argv[4], "%d", &correlation_steps);
     else correlation_steps = size * size;
-    if (argc >= 6) sscanf(argv[5], "%f", &j);
-    else j = 1.0;
-    if (argc >= 7) sscanf(argv[6], "%f", &b);
-    else b = 0.0;
-    if (argc >= 8) sscanf(argv[7], "%d", &*seed);
+    if (argc >= 6) sscanf(argv[5], "%d", &*seed);
     else *seed = rand() % M;
   int* array;
   float* exps;
-  int i, k;
+  int i, k, _j;
   float delta, e, m;
+
+  b = 0.0;
 
   array = (int*)malloc(sizeof(int) * size * size);
   exps = (float*)malloc(sizeof(float) * 10);
 
   fill(array, size, seed);
-  fill_exps(exps, j, b);
 
-  for (i = 0; i < termalization; i++) flip(array, size, j, b, seed, exps);
-
-  e = energy(array, size, j, b);
-  magnetization(array, size);
-
-  // printf("%s,%s,%s,%s,%s\n", "j", "h", "m", "h2", "m2");
-  for (i = 0; i < samples; i++){
-    for (k = 0; k < correlation_steps; k++){
-      delta = flip(array, size, j, b, seed, exps);
-      e += delta;
+  for (_j = 0; _j < 50; _j++) {
+    j = -0.6 + 0.5 * _j / 1.0 / 50;
+    if (_j == 0) {
+      for (i = 0; i < termalization; i++) flip(array, size, j, b, seed, exps);
+      e = energy(array, size, j, b);
     }
-    m = magnetization(array, size);
-    printf("%f,%f,%f,%f,%f\n", j, e, m, e * e, m * m);
+    fill_exps(exps, j, b);
+    for (i = 0; i < samples; i++){
+      for (k = 0; k < correlation_steps; k++){
+        delta = flip(array, size, j, b, seed, exps);
+        e += delta;
+      }
+      m = magnetization(array, size);
+      printf("%d,%f,%f,%f,%f,%f\n", size, j, e, m, e * e, m * m);
+    }
   }
   return 0;
 }
