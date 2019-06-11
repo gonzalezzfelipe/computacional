@@ -146,10 +146,10 @@ INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmmib
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy9.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm
-INPUT /Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman9-bold.luc
 INPUT /Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc
 INPUT /Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc
 INPUT /Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman9-italic.luc
+INPUT /Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman9-bold.luc
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmr7.tfm
 INPUT /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm

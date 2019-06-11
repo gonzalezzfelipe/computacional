@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex apspaper"] 1560138869 "apspaper.aux" "apspaper.bbl" "apspaper" 1560138934
+["bibtex apspaper"] 1560138869 "apspaper.aux" "apspaper.bbl" "apspaper" 1560266892
   "/usr/local/texlive/2018/texmf-dist/bibtex/bst/revtex/apsrev4-1.bst" 1480098436 71518 fec93f06df0c073f83d2330456bd19c2 ""
-  "apspaper.aux" 1560138933 4956 d603c7cec3c69396ea94a9025bcdc01e ""
+  "apspaper.aux" 1560266891 4956 d603c7cec3c69396ea94a9025bcdc01e ""
   "apspaper.bib" 1560103925 665 cfd0dc310f0f3d70d49307438175a06f ""
-  "apspaperNotes.bib" 1560138933 103 48ad29797468f16e2853d8797278d7af ""
+  "apspaperNotes.bib" 1560266891 103 48ad29797468f16e2853d8797278d7af ""
   (generated)
   "apspaper.bbl"
   "apspaper.blg"
-["lualatex"] 1560138932 "apspaper.tex" "apspaper.pdf" "apspaper" 1560138934
+["lualatex"] 1560266889 "apspaper.tex" "apspaper.pdf" "apspaper" 1560266892
   "/Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-italic.luc" 1556997588 136748 dc7b66ddef1f87c8ecef9594fa4ba63d ""
   "/Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1556997586 134930 00ae4e6b8bb3b328fba6fb1bcf4ea21b ""
   "/Users/felipe/Library/texlive/2018/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc" 1556997587 135890 ed47b24bd5791e5d2e2d0da86a6cf608 ""
@@ -152,21 +152,21 @@
   "/usr/local/texlive/2018/texmf-dist/tex/luatex/lualibs/lualibs-util-tpl.lua" 1480098845 7100 ccfb5023bc761673396964848d85b5e2 ""
   "/usr/local/texlive/2018/texmf-dist/tex/luatex/luaotfload/luaotfload-characters.lua" 1485820867 1548690 99578c3eff8b68cae3da45a4a7cbfcf2 ""
   "/usr/local/texlive/2018/texmf-var/web2c/luatex/lualatex.fmt" 1551229560 1360355 235fbcf5e91d3b8dc3946ac12f601332 ""
-  "apspaper.aux" 1560138933 4956 d603c7cec3c69396ea94a9025bcdc01e ""
-  "apspaper.bbl" 1560138870 2349 bd19935cc5af6be73d348f6cb4303f0b "bibtex apspaper"
-  "apspaper.tex" 1560138932 16845 a98ffbfdfa07e63b6e2c7f0f08818cdc ""
+  "apspaper.aux" 1560266891 4956 d603c7cec3c69396ea94a9025bcdc01e ""
+  "apspaper.bbl" 1560266728 2349 bd19935cc5af6be73d348f6cb4303f0b "bibtex apspaper"
+  "apspaper.tex" 1560266888 16770 ad8fa258979bfb37d205e52445dd74f2 ""
   "images/ajuste_alpha.png" 1560131137 16046 da8966a15c46d12707af81d5cc8ab3b5 ""
-  "images/ajuste_beta.png" 1560124451 12744 1649a8bbea411b0179ef297b52c2ac6c ""
-  "images/ajuste_gamma.png" 1560137134 17977 5a5766ff16ca6970b3e85b1a3f30d0c9 ""
+  "images/ajuste_beta.png" 1560139092 12744 1649a8bbea411b0179ef297b52c2ac6c ""
+  "images/ajuste_gamma.png" 1560139101 17977 5a5766ff16ca6970b3e85b1a3f30d0c9 ""
   "images/c_vs_j.png" 1560131058 16670 f4dfa70a1dde50dcbbd9325988cb3448 ""
-  "images/chi_vs_j.png" 1560137134 13474 5cbebaf6a88343b95a073fa929f09680 ""
+  "images/chi_vs_j.png" 1560139101 13474 5cbebaf6a88343b95a073fa929f09680 ""
   "images/chi_vs_l.png" 1560138917 21853 3f6e16f139ebd20c31c50bfb7e03bcd8 ""
   "images/correlation.png" 1560109900 19912 3f17fd2b86341f7ea884ce547e0065e1 ""
-  "images/magnetization_vs_j.png" 1560123788 12453 e132d427ea98fb119f30a0dd02b33830 ""
+  "images/magnetization_vs_j.png" 1560139074 12169 5f736191b260f05caceb533a6338db5a ""
   "images/magnetization_vs_l.png" 1560137993 19253 751937f8d1482a7db8b37cde3e7bf480 ""
   "images/termalizacion.png" 1560107466 30913 9c67206340bc52958135bbb72b070525 ""
   (generated)
   "apspaper.log"
-  "apspaper.pdf"
   "apspaperNotes.bib"
+  "apspaper.pdf"
   "apspaper.aux"
